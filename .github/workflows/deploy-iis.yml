@@ -28,17 +28,6 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 5. Stop IIS site (optional but recommended)
-      - name: Stop IIS site
-        run: |
-          iisreset /stop
-
-      # 6. Deploy build to IIS folder
+      # Deploy directly
       - name: Deploy to IIS
-        run: |
-          robocopy build "C:\inetpub\wwwroot\ReactAppSite" /MIR
-
-      # 7. Start IIS again
-      - name: Start IIS site
-        run: |
-          iisreset /start
+        run: robocopy build "C:\inetpub\wwwroot\ReactAppSite" /MIR
