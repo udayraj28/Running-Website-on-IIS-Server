@@ -1,0 +1,44 @@
+name: Build and Deploy React App to IIS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Build React app
+      - name: Build project
+        run: npm run build
+
+      # 5. Stop IIS site (optional but recommended)
+      - name: Stop IIS site
+        run: |
+          iisreset /stop
+
+      # 6. Deploy build to IIS folder
+      - name: Deploy to IIS
+        run: |
+          robocopy build "C:\inetpub\wwwroot\ReactAppSite" /MIR
+
+      # 7. Start IIS again
+      - name: Start IIS site
+        run: |
+          iisreset /start
